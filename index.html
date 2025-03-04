@@ -3,14 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Memory Game - Musical Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .game-container {
+            margin-top: 50px;
+        }
+        .staff {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        .note {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        .note.hidden {
+            visibility: hidden;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .message {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>Memory Game</h1>
-    <div id="game-board">
-        <!-- The game will be rendered here -->
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+
+<h1>Memory Game - Musical Notes</h1>
+<p>Can you remember the notes?</p>
+
+<div class="game-container">
+    <div class="staff" id="
