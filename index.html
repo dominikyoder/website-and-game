@@ -19,6 +19,7 @@
         .note {
             display: inline-block;
             margin: 0 10px;
+            cursor: pointer;
         }
         .note.hidden {
             visibility: hidden;
@@ -38,4 +39,129 @@
 <p>Can you remember the notes?</p>
 
 <div class="game-container">
-    <div class="staff" id="
+    <div class="staff" id="staff"></div>
+    <div class="button-container">
+        <button id="startBtn" onclick="startGame()">Start Game</button>
+    </div>
+    <p class="message" id="message"></p>
+    <p>Lives: <span id="lives">3</span></p>
+</div>
+
+<script>
+    let notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+    let shownNotes = [];
+    let playerInput = [];
+    let lives = 3;
+    let currentRound = 1;
+    let gameInProgress = false;
+
+    function startGame() {
+        if (gameInProgress) return;
+        gameInProgress = true;
+        lives = 3;
+        currentRound = 1;
+        document.getElementById('lives').textContent = lives;
+        document.getElementById('message').textContent = '';
+        nextRound();
+    }
+
+    function nextRound() {
+        if (lives <= 0) {
+            endGame('Game Over! You lost all your lives.');
+            return;
+        }
+        
+        playerInput = [];
+        shownNotes = getRandomNotes(currentRound);
+        displayNotes();
+        currentRound++;
+    }
+
+    function getRandomNotes(count) {
+        let selectedNotes = [];
+        for (let i = 0; i < count; i++) {
+            let randomIndex = Math.floor(Math.random() * notes.length);
+            selectedNotes.push(notes[randomIndex]);
+        }
+        return selectedNotes;
+    }
+
+    function displayNotes() {
+        const staffElement = document.getElementById('staff');
+        staffElement.innerHTML = ''; // Clear previous notes
+        
+        shownNotes.forEach((note, index) => {
+            let noteElement = document.createElement('span');
+            noteElement.textContent = note;
+            noteElement.classList.add('note');
+            staffElement.appendChild(noteElement);
+
+            // Show note for 1 second and then hide it for 1 second
+            setTimeout(() => {
+                noteElement.classList.add('hidden');
+            }, 1000);
+
+            setTimeout(() => {
+                noteElement.classList.remove('hidden');
+            }, 2000);
+        });
+
+        setTimeout(() => {
+            promptPlayerInput();
+        }, 2500);
+    }
+
+    function promptPlayerInput() {
+        const staffElement = document.getElementById('staff');
+        staffElement.innerHTML = ''; // Clear notes after they are hidden
+
+        shownNotes.forEach((note) => {
+            let noteElement = document.createElement('span');
+            noteElement.textContent = note;
+            noteElement.classList.add('note');
+            staffElement.appendChild(noteElement);
+
+            // Allow player to click and input the notes
+            noteElement.addEventListener('click', function () {
+                playerInput.push(noteElement.textContent);
+                checkPlayerInput();
+            });
+        });
+    }
+
+    function checkPlayerInput() {
+        if (playerInput.length === shownNotes.length) {
+            let isCorrect = true;
+            for (let i = 0; i < shownNotes.length; i++) {
+                if (playerInput[i] !== shownNotes[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+
+            if (isCorrect) {
+                nextRound();
+            } else {
+                lives--;
+                document.getElementById('lives').textContent = lives;
+                if (lives <= 0) {
+                    endGame('Game Over! You lost all your lives.');
+                } else {
+                    document.getElementById('message').textContent = 'Incorrect! Try again.';
+                    setTimeout(() => {
+                        document.getElementById('message').textContent = '';
+                        nextRound();
+                    }, 2000);
+                }
+            }
+        }
+    }
+
+    function endGame(message) {
+        gameInProgress = false;
+        document.getElementById('message').textContent = message;
+    }
+</script>
+
+</body>
+</html>
