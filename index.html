@@ -20,8 +20,9 @@
             display: inline-block;
             margin: 0 10px;
             cursor: pointer;
+            font-size: 30px;
         }
-        .note.hidden {
+        .hidden {
             visibility: hidden;
         }
         .button-container {
@@ -70,7 +71,7 @@
             endGame('Game Over! You lost all your lives.');
             return;
         }
-        
+
         playerInput = [];
         shownNotes = getRandomNotes(currentRound);
         displayNotes();
@@ -89,31 +90,32 @@
     function displayNotes() {
         const staffElement = document.getElementById('staff');
         staffElement.innerHTML = ''; // Clear previous notes
-        
+
         shownNotes.forEach((note, index) => {
             let noteElement = document.createElement('span');
             noteElement.textContent = note;
             noteElement.classList.add('note');
             staffElement.appendChild(noteElement);
-
-            // Show note for 1 second and then hide it for 1 second
-            setTimeout(() => {
-                noteElement.classList.add('hidden');
-            }, 1000);
-
-            setTimeout(() => {
-                noteElement.classList.remove('hidden');
-            }, 2000);
         });
 
+        // Hide notes after a short duration and prompt the player
         setTimeout(() => {
-            promptPlayerInput();
-        }, 2500);
+            document.querySelectorAll('.note').forEach(note => {
+                note.classList.add('hidden');
+            });
+
+            setTimeout(() => {
+                document.querySelectorAll('.note').forEach(note => {
+                    note.classList.remove('hidden');
+                });
+                promptPlayerInput();
+            }, 1000);
+        }, 1500);
     }
 
     function promptPlayerInput() {
         const staffElement = document.getElementById('staff');
-        staffElement.innerHTML = ''; // Clear notes after they are hidden
+        staffElement.innerHTML = ''; // Clear notes after they are shown
 
         shownNotes.forEach((note) => {
             let noteElement = document.createElement('span');
@@ -121,7 +123,6 @@
             noteElement.classList.add('note');
             staffElement.appendChild(noteElement);
 
-            // Allow player to click and input the notes
             noteElement.addEventListener('click', function () {
                 playerInput.push(noteElement.textContent);
                 checkPlayerInput();
